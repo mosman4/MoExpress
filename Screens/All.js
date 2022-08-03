@@ -6,7 +6,9 @@ import { useNavigation } from "@react-navigation/native";
 export default function All() {
 
   const navigation = useNavigation()
-
+  const selectedItems = PRODUCTS.filter((item) => {
+    return !item.categoryIds.includes("c00");
+  })
   function renderList(itemData) {
     const item = itemData.item;
     function pressHandler(){
@@ -19,6 +21,7 @@ export default function All() {
       itemPrice={item.price}
       itemImage={item.imageUrl}
       itemSizes={item.size}
+      itemDiscount={item.discount}
       onPress={pressHandler}
     />
     )
@@ -27,7 +30,7 @@ export default function All() {
   return (
     <FlatList 
       keyExtractor={(item) => item.id}
-      data={PRODUCTS}
+      data={selectedItems}
       renderItem={renderList}
       numColumns={2}
     />

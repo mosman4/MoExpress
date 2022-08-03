@@ -1,11 +1,34 @@
-import { View, Text,StyleSheet } from 'react-native'
-import React from 'react'
-
+import { View, Text,StyleSheet, FlatList } from 'react-native';
+import React from 'react';
+import { FEED, PRODUCTS } from '../data/dummy-data';
+import Card from '../components/UI/Card';
+import { useNavigation } from '@react-navigation/native';
 export default function Feed() {
+  const navigation = useNavigation();
+  const selectedItems = PRODUCTS.filter((item) => {
+    return item.categoryIds.includes("c0") || item.discount != null;
+  })
+  function renderFunction(itemData) {
+    const item = itemData.item
+    function pressHandler(){
+      navigation.navigate("ProductDetails",{productId:item.id})
+    }
+    return(
+      <Card
+        itemTitle={item.title}
+        itemDescription={item.description}
+        itemImage={item.imageUrl}
+        itemPrice={item.price}
+        itemDiscount={item.discount}
+        onPress={pressHandler}
+        feed
+      />
+    )
+  }
+  
+  
   return (
-    <View style = {styles.root}>
-      <Text style={styles.text}>Feed</Text>
-    </View>
+    <FlatList keyExtractor={(item) => item.id} data={selectedItems} renderItem={renderFunction}/>
   )
 }
 

@@ -5,9 +5,11 @@ import UIButton from '../UI/UIButton';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
 import IconButton from '../UI/IconButton';
-
+import { ButtonGroup } from '@rneui/themed';
 export default function ProductDetails({route}) {
-  const [isPressed, setPressed] = useState(false);
+  const [isPressed, setPressed] = useState({favorite:false,size:false});
+  const [value, setValue] = useState();
+  const [selectedIndex, setSelectedIndex] = useState(2);
   const productId = route.params?.productId;
   const product = PRODUCTS.find((item)=> item.id === productId)
   const navigation = useNavigation()
@@ -16,7 +18,7 @@ export default function ProductDetails({route}) {
     navigation.setOptions({
       headerRight:({tintColor}) => (  
       <IconButton
-        icon= { isPressed? "heart":"heart-outline"}
+        icon= { isPressed.favorite? "heart":"heart-outline"}
         size={24}
         color={tintColor}
         onPress={addToFavorite}
@@ -27,8 +29,9 @@ export default function ProductDetails({route}) {
 
   function addToFavorite () {
     console.log("Added to favorite")
-    setPressed((state) => !state)
+    setPressed((state) => ({favorite:!state.favorite}))
   }
+  
 
   function addToCartHandler () {
     console.log("Added to cart")
@@ -46,22 +49,34 @@ export default function ProductDetails({route}) {
       iconNum.push(<Ionicons  key={Math.random()} name='star' size={20}/>)
     }
   }
- 
     return iconNum
   }
 
+  function sizeSelectHandler(item) {
+    console.log(item)
+    setPressed((state) => ({size: !state.size}))
+  }
+
+
+  const Sizes = 
+  <View style={styles.sizeShadow}>
+
+<ButtonGroup
+      buttons={product.size}
+      selectedIndex={selectedIndex}
+      onPress={(value) => {
+        setSelectedIndex(value);
+      }}
+      containerStyle={{borderRadius:9}}
+      selectedButtonStyle={{backgroundColor:"black"}}
+    />
+  </View>;
   
-  const Sizes = product.size?.map((item) => {
-    return(
-      <View key={Math.random()} style={styles.sizeShadow}>
-      <View style={styles.sizeView}>
-        <Text>{item}</Text>
-      </View>
-      </View>
-    )
-  })
+  
+  
 
   return (
+    <View style={styles.allRoot}>
     <ScrollView>
       <View style={styles.root}>
           <View style={styles.imageOuter}>
@@ -71,26 +86,26 @@ export default function ProductDetails({route}) {
           </View>
           <View style={styles.outer}>
           <View style={styles.cardInner}>
-          <View style={styles.textView}>
-            <Text style={{marginVertical:20,fontSize:16}}>{product.description}</Text>
-          </View>
           
-          <View style={styles.textView}>
-          <Text style={{fontWeight: "bold", fontSize: 16}}>Users' Rating: </Text>
-         
-          <View style={styles.starsShadow}>
-            <View style={styles.stars}>
-            
-              <Stars/>
-            </View>
-            </View>
-          </View>
           {product.size && <View style={styles.textView}>
-          <Text style={{fontWeight: "bold",fontSize: 16, marginVertical:4}}>Available Sizes:</Text>
+          <Text style={{fontWeight: "bold",fontSize: 16, marginTop:20}}>Available Sizes:</Text>
           <View style={styles.SizesView}>
             {Sizes}
             </View>
             </View>}
+          <View style={styles.textView}>
+          <Text style={[{fontWeight: "bold", fontSize: 16},!(product.size) && {marginTop:20}]}>Users' Rating: </Text>
+          <View style={styles.starsShadow}>
+            <View style={styles.stars}>
+              <Stars/>
+            </View>
+            </View>
+          </View>
+          <View style={styles.textView}>
+          <Text style={{fontWeight: "bold",fontSize: 16, marginVertical:4}}>Description:</Text>
+            <Text style={{fontSize:16}}>{product.description}</Text>
+          </View>
+          
          
             <View style={styles.textView}>
             <Text style={styles.headText}>Contact Number:</Text>
@@ -101,15 +116,16 @@ export default function ProductDetails({route}) {
             <Text>7 business years</Text>
             </View>
             </View>
-            <View style={styles.cartButton}>
-             <Text style={styles.priceText}>{product.price} USD</Text>
-             <UIButton title={"Add to cart"} onPress={addToCartHandler}/>
-            </View>  
+            
             </View>
-          
+            
           </View>
-        
           </ScrollView>
+          { product.price && <View style={styles.cartButton}>
+          <Text style={styles.priceText}>{product.price} USD</Text>
+         <UIButton title={"Add to cart"} onPress={addToCartHandler}/>
+        </View>}  
+        </View>
   );
 }
 const styles = StyleSheet.create({
@@ -117,15 +133,18 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 9,
-    margin:1,
-    marginHorizontal:7,
+    margin:7,
     height:"100%"
-  
   },
   cardInner:{
     backgroundColor:"#FFFFFFBE",
-   
+    paddingBottom:110,
     borderRadius:15
+  },
+  allRoot:{
+    flex:1,
+    justifyContent:"center",
+    alignContent:"center"
   },
   root: {
     flex: 1,
@@ -172,13 +191,16 @@ const styles = StyleSheet.create({
     paddingLeft:10,
   },
   cartButton: {
-    width:"100%",
+    width:"90%",
     flexDirection:"row",
     justifyContent:"space-between",
     backgroundColor:"black",
-    padding:10,
+    padding:3,
     borderRadius:10,
-    marginVertical:20
+    marginHorizontal:20,
+    position:"absolute",
+    bottom:30,
+    
 },
   stars:{
     flexDirection:"row",
@@ -186,7 +208,7 @@ const styles = StyleSheet.create({
     borderRadius:9,
     backgroundColor: '#FFFFFFC1',
     padding:10,
-    marginVertical:9
+ 
 
   },
   starsShadow:{
@@ -203,7 +225,7 @@ const styles = StyleSheet.create({
 
   },
   SizesView:{
-    flexDirection:"row"
+  
   },
   sizeShadow:{
     shadowColor: '#black',

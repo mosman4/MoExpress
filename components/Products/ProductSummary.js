@@ -8,6 +8,7 @@ export default function ProductSummary({
   itemPrice,
   itemImage,
   itemSizes,
+  itemDiscount,
   onPress
 }){
 
@@ -18,6 +19,8 @@ export default function ProductSummary({
       itemPrice={itemPrice}
       itemImage={itemImage}
       itemSizes={itemSizes}
+      itemDiscount={itemDiscount}
+      summary
       onPress={onPress}
     />
   );

@@ -1,20 +1,27 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  ScrollView,
-  Pressable,
-} from "react-native";
-import React from "react";
+import { View,Text,StyleSheet,ScrollView,Pressable,ImageBackground,} from "react-native";
+import React,{useState} from "react";
 
 export default function Card({
   itemTitle,
   itemDescription,
   itemPrice,
   itemImage,
+  feed,
+  itemDiscount,
+  summary,
   onPress,
 }) {
+
+  let para = {numberOfLines:1}
+  if (feed && !itemPrice) {
+    para = {numberOfLines:3}
+  }
+  let discount = "% DISCOUNT"
+  if(summary) {
+    discount ="%"
+  }
+
+
   return (
     <ScrollView>
       <Pressable
@@ -26,14 +33,20 @@ export default function Card({
         <View style={styles.card}>
           <View style={styles.imageOuter}>
             <View style={styles.imageInner}>
-              <Image style={styles.imageStyle} source={{ uri: itemImage }} />
+            <ImageBackground style={[styles.imageStyle,]} source={{ uri: itemImage }}>
+            { itemDiscount && <View style={{justifyContent: 'flex-start',alignItems: 'flex-start',backgroundColor:"#FFB700",width:"30%"}}> 
+                <Text style={{padding:10,fontWeight:"600"}}> {itemDiscount}{discount}</Text>
+               </View>}
+            </ImageBackground>
             </View>
           </View>
-          <View style={styles.textView}>
-            <Text>{itemTitle}</Text>
-            <Text style={styles.priceText}>${itemPrice}</Text>
-            <Text numberOfLines={1}>{itemDescription}</Text>
+          <View style={feed?styles.textView:[styles.textView,{width:190}]}>
+            <Text style={feed && {fontWeight:"bold",fontSize:18}}>{itemTitle}</Text>
+            <Text {...para}>{itemDescription}</Text>
+           {itemPrice && <Text style={styles.priceText}>${itemPrice}</Text>}
+            
           </View>
+         
         </View>
       </Pressable>
     </ScrollView>
@@ -47,7 +60,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    width: 190,
+    // width: "100%",
     height: 280,
     margin: 10,
   },
@@ -58,6 +71,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.09,
     shadowRadius: 1,
+    
   },
   imageInner: {
     borderBottomEndRadius: 15,
@@ -65,6 +79,10 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     justifyContent: "center",
     alignContent: "center",
+    
+  },
+  imageStyle: {
+    height: 190,
   },
   card: {
     justifyContent: "center",
@@ -72,12 +90,10 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: "white",
     borderRadius: 9,
+    // width:190
     
   },
-  imageStyle: {
-    width: "100%",
-    height: 190,
-  },
+  
   textView: {
     margin: 6,
   },
