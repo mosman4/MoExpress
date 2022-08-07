@@ -41,8 +41,8 @@ export default function Card({
             </View>
           </View>
           <View style={feed?styles.textView:[styles.textView,{width:190}]}>
-            <Text style={feed && {fontWeight:"bold",fontSize:18}}>{itemTitle}</Text>
-            <Text {...para}>{itemDescription}</Text>
+            <Text style={{fontWeight:"700"}}>{itemTitle}</Text>
+            <Text {...para} style={{fontSize:12}}>{itemDescription}</Text>
            {itemPrice && <Text style={styles.priceText}>${itemPrice}</Text>}
             
           </View>
@@ -61,8 +61,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     // width: "100%",
-    height: 280,
-    margin: 10,
+    height: "10%",
+    margin: 5,
   },
   press: {
     opacity: 0.6,
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     margin: 6,
   },
   priceText: {
-    fontWeight: "bold",
-    fontSize: 23,
+    fontWeight:"700",
+    fontSize:18
   },
 });
