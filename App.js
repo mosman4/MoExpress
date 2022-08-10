@@ -28,7 +28,7 @@ const Stack = createStackNavigator();
 
 
 function Drawers() {
-  const CartItems = useSelector((state) => state.items)
+  const CartItems = useSelector((state) => state.cartItems)
 
   return (
     <Drawer.Navigator

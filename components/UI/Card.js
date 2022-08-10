@@ -1,5 +1,5 @@
 import { View,Text,StyleSheet,ScrollView,Pressable,ImageBackground,} from "react-native";
-import React,{useState} from "react";
+import React from "react";
 
 export default function Card({
   itemTitle,

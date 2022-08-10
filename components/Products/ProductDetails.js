@@ -12,12 +12,13 @@ import { cartActions } from '../../store/store-redux';
 import {Shake} from "react-native-motion";
 export default function ProductDetails({route}) {
   const dispatch = useDispatch();
-  const CartItems = useSelector((state) => state.items)
+  const CartItems = useSelector((state) => state.cartItems)
+  const products = useSelector((state) => state.products)
   const [shakeValue,setShakeValue] = useState(0)
   const [isPressed, setPressed] = useState({favorite:false,addedToCart:false});
   const productId = route.params?.productId;
   const isInCart = route.params?.isInCart;
-  const product = PRODUCTS.find((item)=> item.id === productId)
+  const product = products.find((item)=> item.id === productId)
   const navigation = useNavigation()
   const itemInCart = CartItems.find((item) => item.productId === productId)
   const foundQuantity =  itemInCart?.quantity
@@ -26,7 +27,7 @@ export default function ProductDetails({route}) {
 
   const [Input, setInput] = useState({
 	id:null,
-	selectedSizeIndex:itemInCart ?foundSizeIndex:0,
+	selectedSizeIndex:itemInCart ?foundSizeIndex:null,
 	quantity:itemInCart? foundQuantity:1,
   });
 
@@ -57,18 +58,21 @@ export default function ProductDetails({route}) {
     navigation.navigate("Cart")	
   }
   
-  function addToCartHandler() {
+  async function addToCartHandler() {
   const Item = {
 		productId:productId,
 		size :product.size? product.size[Input.selectedSizeIndex]:null,
 		quantity:Input.quantity,
-    price:product.price 
+    price:product.price,
 	}
   if(isInCart) {
 	dispatch(cartActions.replaceItemInCart(Item))
 	navigation.navigate("Cart")
   }else {
-	dispatch(cartActions.addItemToCart(Item))
+  // const id = await addToCart(Item)
+  // console.log(id)
+  dispatch(cartActions.addItemToCart(Item))
+  
   	setPressed({addedToCart:true})
   	setShakeValue((current) => current + 1)
 	}
@@ -169,7 +173,7 @@ const Sizes =  <View style={styles.sizeShadow}>
           </ScrollView>
          { product.price && <Shake style={{flexDirection:"row"}} value={shakeValue} type="timing">
  	
-	    {(!itemInCart || isInCart)  &&
+	    {(!itemInCart || isInCart)  && Input.selectedSizeIndex != null&&
 	      <View style={[styles.cartButton,{flexDirection:"row",backgroundColor:"#000000E3",}]}>
          <View style={{backgroundColor:"white",margin:13,justifyContent:"center",borderRadius:9}}>
           <Text style={{ fontWeight: "bold",fontSize: 17,color:"black",textAlign:"center",padding:10}}>

@@ -3,9 +3,11 @@ import { useSelector } from 'react-redux'
 import { PRODUCTS } from '../data/dummy-data';
 import CartPage from '../components/Products/CartPage';
 import { Ionicons } from "@expo/vector-icons";
+import { addOrder } from '../Config/Http';
 
 export default function Cart() {
-  const itemsInCart = useSelector((state) => state.items)
+  const itemsInCart = useSelector((state) => state.cartItems)
+  const products = useSelector((state) => state.products)
   const total = useSelector((state) => state.total)
   //FallBack Screen
   if(itemsInCart.length == 0) {
@@ -19,12 +21,14 @@ export default function Cart() {
     )
   }
 
-  function checkoutHandler() {
+  async function checkoutHandler() {
+    const id = await addOrder(itemsInCart)
+    console.log(id)
     Alert.alert("Your order has been received!","a copy of the bill was automatically sent to your email")
   }
   function renderFunction (itemData) {
     const item = itemData.item;
-    const product = PRODUCTS.find((i) => i.id == item.productId)
+    const product = products.find((i) => i.id == item.productId)
     return (
       
       <CartPage
