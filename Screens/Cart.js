@@ -4,11 +4,15 @@ import { PRODUCTS } from '../data/dummy-data';
 import CartPage from '../components/Products/CartPage';
 import { Ionicons } from "@expo/vector-icons";
 import { addOrder } from '../Config/Http';
+import { useContext } from 'react';
+import { AuthContext } from '../store/context-store';
 
 export default function Cart() {
   const itemsInCart = useSelector((state) => state.cartItems)
   const products = useSelector((state) => state.products)
   const total = useSelector((state) => state.total)
+  const userCxt = useContext(AuthContext)
+
   //FallBack Screen
   if(itemsInCart.length == 0) {
     return(
@@ -22,7 +26,9 @@ export default function Cart() {
   }
 
   async function checkoutHandler() {
-    const id = await addOrder(itemsInCart)
+    const username = userCxt.username;
+    const uid = userCxt.UID
+    const id = await addOrder(itemsInCart,username,uid)
     console.log(id)
     Alert.alert("Your order has been received!","a copy of the bill was automatically sent to your email")
   }

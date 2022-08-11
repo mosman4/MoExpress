@@ -13,7 +13,7 @@ export default function All() {
   const navigation = useNavigation()
 
   useEffect(()=> {
-    if(products.length == 0){
+   
       async function getProducts(){
         try{
           const fetchedProducts = await fetchProducts();
@@ -21,10 +21,15 @@ export default function All() {
           dispatch(cartActions.addProduct(fetchedProducts))
         }catch(error){
           alert(error)
+          setLoading(false)
+          console.log(error)
         }
       }
       getProducts()
-    } 
+    
+    return()=>{
+      dispatch(cartActions.removeProducts())
+    }
   },[])
   
   

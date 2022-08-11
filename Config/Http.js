@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { AuthContext } from "../store/context-store";
 import { firebase,db } from "./fbConfig";
 export async function fetchProducts(){
         let productsObj = [];
@@ -20,7 +22,7 @@ export async function fetchProducts(){
       return productsObj;
 }
 
-export async function addOrder (productData){
+export async function addOrder (productData,uid,username){
     const addToRef = firebase.firestore().collection("Orders")
     let id;
     if (productData != null){
@@ -28,8 +30,8 @@ export async function addOrder (productData){
         const data = {
 	Cart:productData,
 	User: {  
-	    userId:"Mkbhd",
-	    name:"Mohamed"
+	    userId:uid,
+	    name:username
 	    }
 	};
 

@@ -13,14 +13,19 @@ import Accessories from "./Screens/Categories/Accessories";
 import Women from "./Screens/Categories/Women";
 import Shoes from "./Screens/Categories/Shoes";
 import Perfumes from "./Screens/Categories/Perfumes";
+import LoginScreen from "./Screens/Authentication/LoginScreen"
+import SignupScreen from "./Screens/Authentication/SignupScreen"
 import Electronics from "./Screens/Categories/Electronics";
 import { createStackNavigator } from "@react-navigation/stack";
 import ProductDetails from "./components/Products/ProductDetails";
 import { StatusBar } from "expo-status-bar";
-import StoreContextProvider, { StoreContext } from "./store/context-store";
+import StoreContextProvider, { AuthContext, StoreContext } from "./store/context-store";
 import store from "./store/store-redux";
 import { Provider, useSelector } from "react-redux";
 import IconButton from "./components/UI/IconButton";
+import { useContext, useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingOverlay from "./components/UI/LoadingOverlay";
 
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
@@ -188,26 +193,66 @@ function Tabs(){
   )
 }
 
-export default function App() {
+function AuthStack(){
+  return(
+    <Stack.Navigator screenOptions={{headerShown:"false"}}>
+      <Stack.Screen name="Login" component={LoginScreen}/>
+      <Stack.Screen name="Signup" component={SignupScreen}/> 
+    </Stack.Navigator>
+  )
+}
 
+function AuthenticatedStack(){
+  return(
+    <Stack.Navigator >
+    	<Stack.Screen  name="Main" component={Tabs} options={{headerShown:false}}/>
+   	<Stack.Screen name="ProductDetails" component={ProductDetails} options={{  
+    		title:"Details",
+    		headerTintColor: "white",
+    		headerStyle: { backgroundColor: "#000000" },
+    		stackStyle: { width: "60%" },
+    		stackActiveTintColor: "#FB7E02",
+  		}} />
+ 	 </Stack.Navigator>
+  )
+}
+
+function Root(){
+	const AuthCxt = useContext(AuthContext);
+	const [isLogging,setLogging] = useState(true);
+	useEffect(()=>{
+		async function fetchLogin () {
+			const storedToken = await AsyncStorage.getItem("token")
+      const storedName = await AsyncStorage.getItem("username")
+      const storedUID = await AsyncStorage.getItem("uid")
+			if(storedToken){
+				AuthCxt.signedHandler(storedToken,storedName,storedUID)
+			}
+			setLogging(false)
+		}
+		fetchLogin()
+	},[])
+	if (isLogging) {
+		return <LoadingOverlay/>
+	}
+	return <Navigation/>
+}
+
+function Navigation() {
+	const AuthCxt = useContext(AuthContext);
+	return(
+	<NavigationContainer style={styles.container} >
+	 {!AuthCxt.isLoggedIn && <AuthStack/>}
+	 {AuthCxt.isLoggedIn && <AuthenticatedStack/>}
+	</NavigationContainer>
+	)
+}
+export default function App() {
   return (
-  
     <StoreContextProvider>
     <Provider store={store}>
-      <StatusBar style="light" />
-    <NavigationContainer style={styles.container} >
-   
-      <Stack.Navigator >
-        <Stack.Screen  name="Main" component={Tabs} options={{headerShown:false}}/>
-        <Stack.Screen name="ProductDetails" component={ProductDetails} options={{  
-        title:"Details",
-        headerTintColor: "white",
-        headerStyle: { backgroundColor: "#000000" },
-        stackStyle: { width: "60%" },
-        stackActiveTintColor: "#FB7E02",
-      }} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <StatusBar style="light" />
+	<Root/>
     </Provider>
     </StoreContextProvider>
   );
