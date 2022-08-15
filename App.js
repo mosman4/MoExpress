@@ -29,6 +29,7 @@ import LoadingOverlay from "./components/UI/LoadingOverlay";
 import Favorites from "./Screens/Favorites";
 import Orders from "./Screens/Orders";
 import OrdersCart from "./components/Products/OrdersCart";
+import Kids from "./Screens/Categories/Kids";
 
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
@@ -66,6 +67,7 @@ function Drawers() {
           ),
         })}
       />
+      
       <Drawer.Screen
         name="Men"
         component={Men}
@@ -86,6 +88,17 @@ function Drawers() {
           drawerActiveTintColor: "#f197d1",
           drawerIcon: ({ color, size }) => (
             <Ionicons name="female" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Kids"
+        component={Kids}
+        options={{
+          headerStyle: { backgroundColor: "#CEAB2A" },
+          drawerActiveTintColor: "#CEAB2A",
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="shirt-outline" size={size} color={color} />
           ),
         }}
       />

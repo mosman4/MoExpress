@@ -15,6 +15,7 @@ export async function fetchProducts(){
             	imageUrl:item.data().imageUrl,
             	price:item.data().price,
             	size:item.data().size,
+				discount:item.data().discount,
             	stars:item.data().stars,
             })
         })
@@ -150,29 +151,30 @@ export async function fetchFavorite(uid){
 
 
 
-// export function addProduct (productData){
-//     const addToRef = firebase.firestore().collection("Products")
+export async function addProducts (productData){
+    const addToRef = firebase.firestore().collection("Products")
 
-//     if (productData != null){
-//         const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-//         const data = {
-//             title:productData.title,
-//             categoryIds:productData.categoryIds,
-//             description:productData.description,
-//             header:productData.header,
-//             imageUrl:productData.imageUrl,
-//             price:productData.price,
-//             size:productData.size,
-//             stars:productData.stars,
-//             createdAt:timestamp
-//         };
-//         addToRef
-//                 .add(data)
-//                 .then(() => {
-//                     console.log("Product was sent")
-//                 })
-//                 .catch((error) => {
-//                     alert(error)
-//          })
-//     }
-// }
+    if (productData != null){
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        const data = {
+            title:productData.title,
+            categoryIds:productData.categoryIds,
+            description:productData.description,
+            header:productData.header,
+            imageUrl:productData.imageUrl,
+            price:productData.price,
+            size:productData.size,
+            stars:productData.stars,
+			discount:productData.discount,
+            createdAt:timestamp
+        };
+        addToRef
+                .add(data)
+                .then(() => {
+                    console.log("Product was sent")
+                })
+                .catch((error) => {
+                    alert(error)
+         })
+    }
+}

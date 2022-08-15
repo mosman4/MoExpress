@@ -20,8 +20,6 @@ export default function All() {
       async function getProducts(){
         try{
           const fetchedProducts = await fetchProducts();
-     
-          // console.log(PRODUCTS)
           setLoading(false)
           dispatch(cartActions.addProduct(fetchedProducts))
 
@@ -62,9 +60,8 @@ export default function All() {
   const selectedItems = products.filter((item) => {
     return !item.categoryIds.includes("c00");
   })
-  function renderList(itemData) {
+   function renderList(itemData) {
     const item = itemData.item;
-   
     function pressHandler(){
       navigation.navigate("ProductDetails",{productId:item.id})
     }

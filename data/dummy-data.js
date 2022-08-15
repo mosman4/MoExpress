@@ -9,6 +9,7 @@ export const CATEGORIES = [
     new category("c4","Accessories"),
     new category("c5","Perfumes"),
     new category("c6","Electrics"),
+    new category("c7","kids"),
     new category("c0","feed"),
     new category("c00","news"),
 ];
@@ -35,4 +36,11 @@ export const PRODUCTS = [
     new products("p13","Men Levis jeans","c1","https://www.bolf.eu/eng_pl_Mens-Jeans-Skinny-Fit-Navy-Blue-Bolf-KX555-84571_13.jpg","Jeans that will make you look less of a man and Jeans that will make you look less of a man and Jeans that will make you look less of a man and Jeans that will make you look less of a man",100,4,null,null,null),
     new products("p14","MacBook Air M2",["c00","c0"],"https://www.xda-developers.com/files/2022/06/MacBook-Air-2022-Midnight-overhead-view-with-lid-open.jpg","With the newest mac, you can manage many tasks simultaneously. Perfect for producers, designers and programmers. Order yours now !",null,4,null,"The latest version of MacBook pro is Here !",null),
     new products("p16","Iphone 15",["c0","c6"],"https://technextgroup.com/wp-content/uploads/2022/03/Tech-Next-Store-iPhone-13-Pro-Starlight1-1.jpg","With the newest mac, you can manage many tasks simultaneously. Perfect for producers, designers and programmers. Order yours now !",2000,5,null,"Iphone 15 is the latest version of MacBook pro is Here !",20),
+    new products("p17","Panda Shirt","c7","https://images.teemill.com/lyzvxz49ht8trudpn7ab7etuc4e4whsx8ozkaxpjcnz3msdc.png.jpg?w=1080&h=auto","Beautiful shirt for boys, light and perfect for the summer with cute panda face available in different sizes for different ages and different groups. Every kid will find a fit!",75,5,["S","M","L"],null,null),
+    new products("p18","Girls Plaid Mini Skirt","c7","https://i.pinimg.com/736x/92/8b/6c/928b6cdede331f5cec41bbbc419a1e0f.jpg","Girls Plaid Mini Skirt, light and perfect for the summer with cute panda face available in different sizes for different ages and different groups. Every queen will find a fit!",60,5,["S","M","L"],null,null),
+    new products("p19","Boys pair of pants","c7","https://mrpg.scene7.com/is/image/MRP/01_6100311050_SI_00","The perfect pair of pants for a busy little guy! These comfy shorts feature a fun and playful statement print, elasticated waistband and drawstring for a firm hold and a knee length fit. The soft material makes these pants for play time! Partner this look with a statement tee and sneakers for swagger little dude.",63,5,["S","M","L"],null,null),
+    new products("p20","Little Kid Pajamas Butterfly","c7","https://www.hannaandersson.com/dw/image/v2/BBLM_PRD/on/demandware.static/-/Sites-master-catalog/default/dwf10f6b8e/images/main/60611/60611_XC8_110_02.jpg?sw=369&q=90","Featuring Skip Hop's signature Zoo characters, our kids pajamas come to life with fun appliqués and embroidered details. With a scratch-free, double lined top, they are made of soft, 100 percent cotton for a good night's sleep.",32,4,["S","M","L"],null,null),
+    new products("p21","Kids Pajama Set","c7","https://media.neimanmarcus.com/f_auto,q_auto/w_1200,h_1500/01/nm_4112748_100134_m","Whether they’re waiting for Santa to drop by or simply plan on settling in for a snooze, they’ll love cuddling into this Striped Pajama Set",40,4,["S","M","L"],null,30),
+    new products("p22","High Quality Kid Pajamas","c7","https://media.theeverymom.com/wp-content/uploads/2020/09/24092254/best-fall-pjs-for-kids-the-everymom-gallery.jpeg","Children Pajama Set Kids Pajamas For Girls Boys Nightwear Toddler Boy Cartoon Cotton Sleepwear New Autumn Baby Girl Dinosaur",50,4,["S","M","L"],null,10),
+
 ];

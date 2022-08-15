@@ -1,13 +1,25 @@
 import { View, Text,StyleSheet, FlatList } from 'react-native';
 import React from 'react';
 import { FEED, PRODUCTS } from '../data/dummy-data';
+import { useSelector } from "react-redux";
 import Card from '../components/UI/Card';
 import { useNavigation } from '@react-navigation/native';
 export default function Feed() {
   const navigation = useNavigation();
-  const selectedItems = PRODUCTS.filter((item) => {
+  const PRODUCTSONLINE = useSelector((state) => state.products)
+  
+  const selectedItems = PRODUCTSONLINE.filter((item) => {
     return item.categoryIds.includes("c0") || item.discount != null;
   })
+  
+  const d = PRODUCTSONLINE.map((item) => item.discount)
+  console.log(d)
+
+  const selectedItems1 = PRODUCTS.filter((item) => {
+    return item.categoryIds.includes("c0") || item.discount != null;
+  })
+
+
   function renderFunction(itemData) {
     const item = itemData.item
     function pressHandler(){
