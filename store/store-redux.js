@@ -4,7 +4,9 @@ const cartSlice = createSlice({
     name:"cart",
     initialState:{
         products:[],
+        favorites:[],
         cartItems:[],
+        orders:[],
         total:0
     },
     reducers:{
@@ -13,8 +15,14 @@ const cartSlice = createSlice({
             state.products.push(...product)
         },
         removeProducts(state){
-            
             state.products = []
+        },
+        pushItemsToCart(state,action){
+            const items = action.payload;
+            if(items.length > 0){
+                state.total += items.map((item) => item.totalPrice).reduce((initial,final) => initial + final)
+                state.cartItems.push(...items)
+            }
         },
         addItemToCart(state,action){
             const newItem = action.payload;
@@ -38,6 +46,9 @@ const cartSlice = createSlice({
             const filtered = state.cartItems.filter((item) =>  item.productId !== itemId)
             state.cartItems = filtered
         },
+        resetCart(state){
+            state.cartItems = []
+        },
         replaceItemInCart(state,action) {
             const updatedItem = action.payload;
             const oldQuantity = state.cartItems.find((item) => item.productId == updatedItem.productId).quantity;
@@ -47,6 +58,34 @@ const cartSlice = createSlice({
             state.total -= oldQuantity * price
             state.total += newQuantity * price
             state.cartItems.find((item) => item.productId == updatedItem.productId).size = updatedItem.size;
+        },
+        addFavorites(state,action){
+            const items = action.payload;
+            state.favorites.push(...items)
+        },
+        addToFavorite(state,action) {
+            const productId = action.payload;
+            state.favorites.push(productId)
+        },
+        removeFromFavorite(state,action){
+            const itemId = action.payload;
+            const filtered = state.favorites.filter((item) =>  item.productId !== itemId.productId)
+            state.favorites = filtered
+        },
+        resetFavorites(state){
+            state.favorites=[]
+        },
+        addOrders(state,action){
+            const products = action.payload;
+            state.orders.push(...products)
+        },
+        addNewOrder(state,action){
+            const item = action.payload;
+            const product = {id:item.id,orderItems:item.itemsInCart}
+            state.orders.push(product)
+        },
+        resetOrders(state){
+            state.orders=[]
         }
     },
 });

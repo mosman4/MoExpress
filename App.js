@@ -26,6 +26,9 @@ import IconButton from "./components/UI/IconButton";
 import { useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingOverlay from "./components/UI/LoadingOverlay";
+import Favorites from "./Screens/Favorites";
+import Orders from "./Screens/Orders";
+import OrdersCart from "./components/Products/OrdersCart";
 
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
@@ -213,6 +216,10 @@ function AuthenticatedStack(){
     		stackStyle: { width: "60%" },
     		stackActiveTintColor: "#FB7E02",
   		}} />
+    <Stack.Screen  name="Favorites" component={Favorites} options={{headerShown:true}}/>
+    <Stack.Screen  name="Orders" component={Orders} options={{headerShown:true}}/>
+    <Stack.Screen  name="OrdersCart" component={OrdersCart} options={{headerShown:true}}/>
+
  	 </Stack.Navigator>
   )
 }
@@ -226,7 +233,7 @@ function Root(){
       const storedName = await AsyncStorage.getItem("username")
       const storedUID = await AsyncStorage.getItem("uid")
 			if(storedToken){
-				AuthCxt.signedHandler(storedToken,storedName,storedUID)
+				AuthCxt.signedHandler(storedToken,storedUID,storedName)
 			}
 			setLogging(false)
 		}

@@ -1,21 +1,26 @@
 import { View, Text, StyleSheet,Image, Pressable } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext} from "react";
 import InputSpinner from "react-native-input-spinner";
 import { useDispatch } from "react-redux";
 import { cartActions } from "../../store/store-redux";
 import IconButton from "../UI/IconButton";
 import { useNavigation } from "@react-navigation/native";
-import { color } from "react-native-reanimated";
+import { handleCart } from "../../Config/Http";
+import { AuthContext } from "../../store/context-store";
 export default function CartPage({productId,title,size,quantity,price,image,description}) {
   const dispatch = useDispatch()
   const navigation = useNavigation()
+  const AuthCxt = useContext(AuthContext);
+  const uid = AuthCxt.UID;
+
 
   function removeItemHandler(){
+    handleCart("delete",{productId:productId},uid)
     dispatch(cartActions.removeItemFromCart(productId))
   }
 
   function updateQuantity (value) {
-    
+    handleCart("updateQuantity",{productId:productId,quantity:value},uid)
     dispatch(cartActions.updateQuantity({productId:productId,updateQuantity:value}))
   }
 

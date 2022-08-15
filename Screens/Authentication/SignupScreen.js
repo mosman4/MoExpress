@@ -4,16 +4,24 @@ import { Alert } from 'react-native';
 import AuthContent from "../../components/Auth/AuthContent";
 import {AuthContext} from "../../store/context-store"
 import { registerWithEmailAndPassword } from '../../Config/Auth';
+import { fetchCart, fetchOrders } from '../../Config/Http';
+import { useDispatch } from 'react-redux';
+import { cartActions } from '../../store/store-redux';
 
 function SignupScreen() {
   const [isLoading, setLoading] = useState(false)
   const AuthCxt = useContext(AuthContext)
-
+  const dispatch = useDispatch()
+  
   async function signUpHandler ({username,email,password}){
     setLoading(true)
     try{
-      const userInfo = await registerWithEmailAndPassword(username,email,password)
-      AuthCxt.setUser(userInfo)
+      const user = await registerWithEmailAndPassword(username,email,password)
+      const fetchedOrders = await fetchOrders(user.uid)
+      const fetchCartItems = await fetchCart(user.uid)
+      dispatch(cartActions.pushItemsToCart(fetchCartItems))
+      dispatch(cartActions.addOrders(fetchedOrders))
+      AuthCxt.setUser(user)
     }catch(error) {
       setLoading(false)
       console.log(error)

@@ -1,24 +1,30 @@
 import {FlatList,View,Text } from "react-native";
-import React, { useEffect,useState } from "react";
-import ProductSummary from "../components/Products/ProductSummary";
+import React, { useContext, useEffect,useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { fetchProducts } from "../Config/Http";
 import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "../store/store-redux";
 import BouncingPreloader from 'react-native-bouncing-preloaders';
+import Card from "../components/UI/Card";
+import { AuthContext } from "../store/context-store";
+import { PRODUCTS } from "../data/dummy-data";
 export default function All() {
   const dispatch = useDispatch() 
   const products = useSelector((state) => state.products)
   const [isLoading,setLoading] = useState(true)
   const navigation = useNavigation()
-
-  useEffect(()=> {
-   
+  const AuthCxt = useContext(AuthContext);
+  const uid = AuthCxt.UID;
+  
+  useEffect(()=> { 
       async function getProducts(){
         try{
           const fetchedProducts = await fetchProducts();
+     
+          // console.log(PRODUCTS)
           setLoading(false)
           dispatch(cartActions.addProduct(fetchedProducts))
+
         }catch(error){
           alert(error)
           setLoading(false)
@@ -63,13 +69,15 @@ export default function All() {
       navigation.navigate("ProductDetails",{productId:item.id})
     }
     return(
-    <ProductSummary
+   
+     <Card
       itemTitle={item.title}
       itemDescription={item.description}
       itemPrice={item.price}
       itemImage={item.imageUrl}
       itemSizes={item.size}
       itemDiscount={item.discount}
+      summary
       onPress={pressHandler}
     />
     )

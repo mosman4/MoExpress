@@ -1,6 +1,5 @@
 import { View, Text,ScrollView,Image,StyleSheet, LogBox, Pressable} from 'react-native'
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { PRODUCTS } from '../../data/dummy-data';
 import UIButton from '../UI/UIButton';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
@@ -10,26 +9,34 @@ import InputSpinner from "react-native-input-spinner";
 import { useDispatch, useSelector } from 'react-redux';
 import { cartActions } from '../../store/store-redux';
 import {Shake} from "react-native-motion";
+import { handleCart, handleFavorite } from '../../Config/Http';
+import { useContext } from 'react';
+import { AuthContext } from '../../store/context-store';
 export default function ProductDetails({route}) {
   const dispatch = useDispatch();
+  const AuthCxt = useContext(AuthContext);
   const CartItems = useSelector((state) => state.cartItems)
   const products = useSelector((state) => state.products)
+  const favorites = useSelector((state) => state.favorites)
   const [shakeValue,setShakeValue] = useState(0)
-  const [isPressed, setPressed] = useState({favorite:false,addedToCart:false});
   const productId = route.params?.productId;
-  const isInCart = route.params?.isInCart;
+  const foundInCart = route.params?.isInCart;
+  const isFav = favorites.find((item) => item.productId == productId)
+  const [isPressed, setPressed] = useState({favorite:isFav?true:false,addedToCart:false});
   const product = products.find((item)=> item.id === productId)
   const navigation = useNavigation()
   const itemInCart = CartItems.find((item) => item.productId === productId)
   const foundQuantity =  itemInCart?.quantity
   const foundSize = itemInCart?.size;
   const foundSizeIndex = product.size?.indexOf(foundSize);
+  const uid = AuthCxt.UID;
 
   const [Input, setInput] = useState({
 	id:null,
 	selectedSizeIndex:itemInCart ?foundSizeIndex:null,
 	quantity:itemInCart? foundQuantity:1,
   });
+
 
   useEffect(() => {
 	LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
@@ -44,39 +51,44 @@ export default function ProductDetails({route}) {
         icon= { isPressed.favorite ? "heart":"heart-outline"}
         size={25}
         color={tintColor}
-        onPress={addToFavorite}/>
+        onPress={()=> addToItemToFavorite()}/>
       )
   })
-},[navigation,addToFavorite])
+},[navigation,isPressed.favorite])
 
-
-  function addToFavorite () {
-	setPressed((state) => { return{ ...state,favorite:!state.favorite}})
+   function addToItemToFavorite () {
+	setPressed((current) =>{return {...current,favorite:!current.favorite} })
+	const Item = {productId:productId}
+	if(!(isPressed.favorite)){
+		handleFavorite("add",Item,uid)
+		dispatch(cartActions.addToFavorite(Item))
+	}else{
+		handleFavorite("remove",Item,uid)
+		dispatch(cartActions.removeFromFavorite(Item))
+	}
   }
   
   function viewCartHandler() {
     navigation.navigate("Cart")	
   }
   
-  async function addToCartHandler() {
-  const Item = {
+  function addToCartHandler() {
+	const Item = {
 		productId:productId,
 		size :product.size? product.size[Input.selectedSizeIndex]:null,
 		quantity:Input.quantity,
-    price:product.price,
+		price:product.price,
 	}
-  if(isInCart) {
-	dispatch(cartActions.replaceItemInCart(Item))
-	navigation.navigate("Cart")
-  }else {
-  // const id = await addToCart(Item)
-  // console.log(id)
-  dispatch(cartActions.addItemToCart(Item))
-  
-  	setPressed({addedToCart:true})
-  	setShakeValue((current) => current + 1)
+  	if(foundInCart) {
+		handleCart("update",Item,uid)
+		dispatch(cartActions.replaceItemInCart(Item))
+		navigation.navigate("Cart")
+  	}else {
+		handleCart("add",Item,uid)
+  		dispatch(cartActions.addItemToCart(Item))
+  		setPressed({addedToCart:true})
+  		setShakeValue((current) => current + 1)
 	}
-  
   }
 
 
@@ -102,7 +114,8 @@ const Sizes =  <View style={styles.sizeShadow}>
             buttons={product.size}
             selectedIndex={Input.selectedSizeIndex}
             onPress={(value) => setInput((current) => {return { ...current,selectedSizeIndex:value}})}
-            containerStyle={[{borderRadius:9},itemInCart &&!isInCart&&{opacity:0.6}]}
+            containerStyle={[{borderRadius:9},itemInCart &&!foundInCart
+       	    &&{opacity:0.6}]}
             selectedButtonStyle={{backgroundColor:"black"}}
             />
              </View>;
@@ -125,13 +138,14 @@ const Sizes =  <View style={styles.sizeShadow}>
            
 	    <InputSpinner
 	    	rounded={false}
-		max={itemInCart &&!isInCart? foundQuantity:10}
-		min={itemInCart &&!isInCart? foundQuantity:1}
+		max={itemInCart &&!foundInCart? foundQuantity:10}
+		min={itemInCart &&!foundInCart? foundQuantity:1}
 		step={1}
 		color="black"
 		value={Input.quantity}
 		skin="modern"
-		style={[{marginBottom:1,shadowOffset:{ width: 0, height: 3 }, shadowOpacity: 0.5,shadowRadius: 4,alignSelf:"center"},itemInCart &&!isInCart&&{opacity:0.6}]}
+		style={[{marginBottom:1,shadowOffset:{ width: 0, height: 3 }, shadowOpacity: 0.5,shadowRadius: 4,alignSelf:"center"},itemInCart &&!foundInCart
+		&&{opacity:0.6}]}
 		onChange={(num) => setInput((current) => {return {...current,quantity:num}})}
 	     />
           </View>}
@@ -173,17 +187,19 @@ const Sizes =  <View style={styles.sizeShadow}>
           </ScrollView>
          { product.price && <Shake style={{flexDirection:"row"}} value={shakeValue} type="timing">
  	
-	    {(!itemInCart || isInCart)  && Input.selectedSizeIndex != null&&
+	    {(!itemInCart || foundInCart)  &&  (!product.size || Input.selectedSizeIndex != null) &&
 	      <View style={[styles.cartButton,{flexDirection:"row",backgroundColor:"#000000E3",}]}>
          <View style={{backgroundColor:"white",margin:13,justifyContent:"center",borderRadius:9}}>
           <Text style={{ fontWeight: "bold",fontSize: 17,color:"black",textAlign:"center",padding:10}}>
           {product.price} USD
           </Text>
           </View>
-         <UIButton title={isInCart? "Update":"Add to cart"} onPress={addToCartHandler}/>
+         <UIButton title={foundInCart
+      ? "Update":"Add to cart"} onPress={addToCartHandler}/>
 	 </View>}
 
-	 { itemInCart &&!isInCart &&
+	 { itemInCart &&!foundInCart
+ &&
 	 <View style={[styles.cartButton,{backgroundColor:"#029F14D6"}]}>
 	 <Pressable style={{flexGrow:1}} onPress={viewCartHandler}>
 	 <View style={{flexDirection:"row",justifyContent:"center"}}>

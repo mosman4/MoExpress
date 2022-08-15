@@ -1,11 +1,12 @@
 import { FlatList } from "react-native";
 import React from "react";
-import { PRODUCTS } from "../../data/dummy-data";
 import Card from "../../components/UI/Card";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
 export default function Accessories() {
   const navigation = useNavigation()
+  const PRODUCTS = useSelector((state) => state.products)
   const accCat = PRODUCTS.filter((item) => {
     return item.categoryIds.indexOf("c4") >= 0;
   });

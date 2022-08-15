@@ -1,12 +1,13 @@
 import { View,StyleSheet, Text, FlatList } from 'react-native'
 import React from 'react'
-import { PRODUCTS } from '../../data/dummy-data'
 import Card from '../../components/UI/Card';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 export default function Men() {
   const navigation = useNavigation()
-
+  const PRODUCTS = useSelector((state) => state.products)
+  
   const menCat = PRODUCTS.filter((product) => {
     return product.categoryIds.indexOf("c1") >= 0;
   }

@@ -1,8 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, useState } from "react";
 
-
-
 export const AuthContext = createContext({
     token:"",
     username:"",
@@ -31,8 +29,8 @@ export default function AuthContextProvider ({children}){
 
     async function reLogSetter (token,uid,username) {
         setTokensId(token)
-        setName(uid)
-        setUID(username)
+        setName(username)
+        setUID(uid)
         AsyncStorage.setItem("token",token)
         AsyncStorage.setItem("uid",uid)
         AsyncStorage.setItem("username",username)
