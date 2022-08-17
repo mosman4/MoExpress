@@ -1,20 +1,22 @@
 import {FlatList,View,Text } from "react-native";
-import React, { useContext, useEffect,useState } from "react";
+import React, { useEffect,useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { fetchProducts } from "../Config/Http";
 import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "../store/store-redux";
 import BouncingPreloader from 'react-native-bouncing-preloaders';
 import Card from "../components/UI/Card";
+import { useFonts } from "@expo-google-fonts/alex-brush";
+import { useContext } from "react";
 import { AuthContext } from "../store/context-store";
-import { PRODUCTS } from "../data/dummy-data";
+
 export default function All() {
   const dispatch = useDispatch() 
   const products = useSelector((state) => state.products)
   const [isLoading,setLoading] = useState(true)
   const navigation = useNavigation()
-  const AuthCxt = useContext(AuthContext);
-  const uid = AuthCxt.UID;
+  const AuthCxt = useContext(AuthContext)
+
   
   useEffect(()=> { 
       async function getProducts(){
@@ -36,6 +38,13 @@ export default function All() {
     }
   },[])
   
+  const [loaded] = useFonts({
+    "AirbnbFont": require('../assets/Fonts/airbnb-cereal-font/AirbnbCereal_W_Md.otf'),
+  });
+
+  if (!loaded) {
+    return null;
+  }
   
   if(isLoading){
     return(
@@ -80,13 +89,13 @@ export default function All() {
     )
   }
 
-  return (
+  return (  
     <FlatList 
+      ListHeaderComponent={    <Text style={{fontSize:20,fontFamily:"AirbnbFont",margin:10}}>Welcome,{"\n"}{AuthCxt.username} !</Text>}
       keyExtractor={(item) => item.id}
       data={selectedItems}
       renderItem={renderList}
       numColumns={2}
-    />
-  
+    />    
   );
 }

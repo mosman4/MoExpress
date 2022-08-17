@@ -211,8 +211,8 @@ function Tabs(){
 
 function AuthStack(){
   return(
-    <Stack.Navigator screenOptions={{headerShown:"false"}}>
-      <Stack.Screen name="Login" component={LoginScreen}/>
+    <Stack.Navigator screenOptions={{headerShown:false}}>
+      <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Signup" component={SignupScreen}/> 
     </Stack.Navigator>
   )
@@ -220,6 +220,8 @@ function AuthStack(){
 
 function AuthenticatedStack(){
   return(
+    <>        
+    <StatusBar style="light" />
     <Stack.Navigator >
     	<Stack.Screen  name="Main" component={Tabs} options={{headerShown:false}}/>
    	<Stack.Screen name="ProductDetails" component={ProductDetails} options={{  
@@ -234,6 +236,7 @@ function AuthenticatedStack(){
     <Stack.Screen  name="OrdersCart" component={OrdersCart} options={{headerShown:true}}/>
 
  	 </Stack.Navigator>
+    </>
   )
 }
 
@@ -271,7 +274,7 @@ export default function App() {
   return (
     <StoreContextProvider>
     <Provider store={store}>
-    <StatusBar style="light" />
+   
 	<Root/>
     </Provider>
     </StoreContextProvider>

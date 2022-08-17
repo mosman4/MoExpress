@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View,Text } from 'react-native';
 import FlatButton from "../UI/FlatButton";
 import AuthForm from './AuthForm';
 import {Colors} from "../../constants/styles";
@@ -55,14 +55,20 @@ function AuthContent({ isLogin, onAuthenticate }) {
 
   return (
     <View style={styles.authContent}>
+        <Text style={{fontSize:20,marginBottom:15}} >Welcome !</Text>
+
       <AuthForm
         isLogin={isLogin}
         onSubmit={submitHandler}
         credentialsInvalid={credentialsInvalid}
       />
       <View style={styles.buttons}>
+        
+      {isLogin &&  <FlatButton onPress={()=> console.log("reset")}>
+          Forgot your password?
+        </FlatButton>}
         <FlatButton onPress={switchAuthModeHandler}>
-          {isLogin ? 'Create a new user' : 'Log in instead'}
+          {isLogin ? <Text style={{color:"#7E7E7E"}}>Don't have an account? <Text style={{color:"#F16947"}} >Signup</Text></Text> : 'Log in instead'}
         </FlatButton>
       </View>
     </View>
@@ -73,18 +79,17 @@ export default AuthContent;
 
 const styles = StyleSheet.create({
   authContent: {
-    marginTop: 64,
-    marginHorizontal: 32,
+    marginTop: 14,
+    marginHorizontal: 15,
     padding: 16,
     borderRadius: 8,
-    backgroundColor: Colors.primary800,
-    elevation: 2,
     shadowColor: 'black',
     shadowOffset: { width: 1, height: 1 },
-    shadowOpacity: 0.35,
+    shadowOpacity: 0.05,
     shadowRadius: 4,
   },
   buttons: {
     marginTop: 8,
+    
   },
 });

@@ -1,6 +1,6 @@
 import { useContext,useState } from 'react';
 import LoadingOverlay from "../../components/UI/LoadingOverlay";
-import { Alert } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import AuthContent from "../../components/Auth/AuthContent";
 import {AuthContext} from "../../store/context-store"
 import { registerWithEmailAndPassword } from '../../Config/Auth';
@@ -32,7 +32,20 @@ function SignupScreen() {
   if(isLoading) {
     return <LoadingOverlay message="loading"/>
   }
-  return <AuthContent onAuthenticate={signUpHandler}/>;
+  return (
+      <View style={styles.root}>
+           <AuthContent onAuthenticate={signUpHandler}/>
+      </View>
+  )
+  
 }
 
 export default SignupScreen;
+
+const styles= StyleSheet.create({
+  root:{
+    flex:1,
+    justifyContent:"space-around",
+    backgroundColor:"white"
+  }
+})

@@ -19,15 +19,15 @@ export default Button;
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 6,
-    paddingVertical: 6,
+    borderRadius: 20,
+    paddingVertical: 14,
     paddingHorizontal: 12,
     backgroundColor: Colors.primary500,
     elevation: 2,
     shadowColor: 'black',
     shadowOffset: { width: 1, height: 1 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    shadowOpacity: 0.09,
+    shadowRadius: 2,
   },
   pressed: {
     opacity: 0.7,
