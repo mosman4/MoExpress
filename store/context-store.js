@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createContext, useState } from "react";
+import { createContext, useState,useRef } from "react";
 
 export const AuthContext = createContext({
     token:"",
@@ -9,6 +9,7 @@ export const AuthContext = createContext({
     signedHandler:(token) =>{},
     isLoggedIn:false,
     logout:()=>{},
+
 })
 
 export default function AuthContextProvider ({children}){
@@ -16,7 +17,8 @@ export default function AuthContextProvider ({children}){
     const [idToken,setTokensId] = useState("")
     const [name,setName] = useState("")
     const [UID,setUID] = useState("")
-    
+
+
     async function userSetter (user) {
         setName(user.displayName)
         const token =  await user.getIdToken();
@@ -53,6 +55,7 @@ export default function AuthContextProvider ({children}){
         setUser:userSetter,
         isLoggedIn:!!idToken,
         logout:logoutHandler,
+
     }
 
     return(

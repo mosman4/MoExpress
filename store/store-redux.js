@@ -7,6 +7,7 @@ const cartSlice = createSlice({
         favorites:[],
         cartItems:[],
         orders:[],
+        userInfo:{},
         total:0
     },
     reducers:{
@@ -47,7 +48,8 @@ const cartSlice = createSlice({
             state.cartItems = filtered
         },
         resetCart(state){
-            state.cartItems = []
+            state.cartItems = [],
+            state.total= 0
         },
         replaceItemInCart(state,action) {
             const updatedItem = action.payload;
@@ -81,12 +83,24 @@ const cartSlice = createSlice({
         },
         addNewOrder(state,action){
             const item = action.payload;
-            const product = {id:item.id,orderItems:item.itemsInCart}
+            const product = {id:item.id,orderItems:item.itemsInCart,orderDate:item.createdAt}
             state.orders.push(product)
         },
+        
         resetOrders(state){
             state.orders=[]
-        }
+        },
+        addUserInfo(state,action){
+            const item = action.payload;
+            state.userInfo = item;
+        },
+        addAddress(state,action){
+            const item = action.payload;
+            state.userInfo.address = item
+        },
+        resetUserInfo(state,action){
+            state.userInfo = {};
+        },
     },
 });
 

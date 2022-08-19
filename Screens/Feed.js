@@ -12,14 +12,6 @@ export default function Feed() {
     return item.categoryIds.includes("c0") || item.discount != null;
   })
   
-  const d = PRODUCTSONLINE.map((item) => item.discount)
-  console.log(d)
-
-  const selectedItems1 = PRODUCTS.filter((item) => {
-    return item.categoryIds.includes("c0") || item.discount != null;
-  })
-
-
   function renderFunction(itemData) {
     const item = itemData.item
     function pressHandler(){

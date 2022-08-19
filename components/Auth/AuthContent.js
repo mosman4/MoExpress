@@ -1,12 +1,18 @@
-import { useState } from 'react';
-import { Alert, StyleSheet, View,Text } from 'react-native';
+import { useRef, useState } from 'react';
+import { StyleSheet, View,Text } from 'react-native';
 import FlatButton from "../UI/FlatButton";
 import AuthForm from './AuthForm';
-import {Colors} from "../../constants/styles";
 import { useNavigation } from '@react-navigation/native';
+import { useContext } from 'react';
+import { AuthContext } from '../../store/context-store';
+import DropdownAlert from 'react-native-dropdownalert';
+
 
 function AuthContent({ isLogin, onAuthenticate }) {
+  let dropDownAlertRef = useRef();
+  
   const navigation = useNavigation()
+  const AuthCxt = useContext(AuthContext)
   const [credentialsInvalid, setCredentialsInvalid] = useState({
     email: false,
     password: false,
@@ -40,7 +46,9 @@ function AuthContent({ isLogin, onAuthenticate }) {
       !passwordIsValid ||
       (!isLogin && (!emailsAreEqual || !passwordsAreEqual || !usernameIsValid))
     ) {
-      Alert.alert('Invalid input', 'Please check your entered credentials.');
+      dropDownAlertRef.alertWithType('error', 'Wrong input', "please check your password and email");
+
+      // Alert.alert('Invalid input', 'Please check your entered credentials.');
       setCredentialsInvalid({
         email: !emailIsValid,
         username:!usernameIsValid,
@@ -56,7 +64,6 @@ function AuthContent({ isLogin, onAuthenticate }) {
   return (
     <View style={styles.authContent}>
         <Text style={{fontSize:20,marginBottom:15}} >Welcome !</Text>
-
       <AuthForm
         isLogin={isLogin}
         onSubmit={submitHandler}
@@ -70,6 +77,18 @@ function AuthContent({ isLogin, onAuthenticate }) {
         <FlatButton onPress={switchAuthModeHandler}>
           {isLogin ? <Text style={{color:"#7E7E7E"}}>Don't have an account? <Text style={{color:"#F16947"}} >Signup</Text></Text> : 'Log in instead'}
         </FlatButton>
+      <View>
+      <DropdownAlert
+        endDelta={50}
+        startDelta={280}
+        closeInterval={2000}
+        ref={(ref) => {
+          if (ref) {
+            dropDownAlertRef = ref;
+          }
+        }}
+      />
+    </View>
       </View>
     </View>
   );

@@ -30,6 +30,8 @@ import Favorites from "./Screens/Favorites";
 import Orders from "./Screens/Orders";
 import OrdersCart from "./components/Products/OrdersCart";
 import Kids from "./Screens/Categories/Kids";
+import Location from "./Screens/Location";
+import PersonalInfo from "./Screens/PersonalInfo";
 
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
@@ -210,11 +212,14 @@ function Tabs(){
 }
 
 function AuthStack(){
-  return(
+ return(
+  <>
+    <StatusBar style="dark" />
     <Stack.Navigator screenOptions={{headerShown:false}}>
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Signup" component={SignupScreen}/> 
     </Stack.Navigator>
+    </>
   )
 }
 
@@ -231,9 +236,12 @@ function AuthenticatedStack(){
     		stackStyle: { width: "60%" },
     		stackActiveTintColor: "#FB7E02",
   		}} />
-    <Stack.Screen  name="Favorites" component={Favorites} options={{headerShown:true}}/>
-    <Stack.Screen  name="Orders" component={Orders} options={{headerShown:true}}/>
-    <Stack.Screen  name="OrdersCart" component={OrdersCart} options={{headerShown:true}}/>
+      
+    <Stack.Screen  name="Favorites" component={Favorites} options={{headerShown:true,headerStyle:{backgroundColor:"#A21854"},headerTintColor:"white"}}/>
+    <Stack.Screen  name="Location" component={Location} options={{headerShown:true,title:"My Address",headerStyle:{backgroundColor:"#23153F"},headerTintColor:"white"}}/>
+    <Stack.Screen  name="Orders" component={Orders} options={{headerShown:true,headerStyle:{backgroundColor:"#0C5973"},title:"Previous Orders",headerTintColor:"white"}}/>
+    <Stack.Screen  name="OrdersCart" component={OrdersCart} options={{headerShown:true,title:"Previous Items",headerTintColor:"white", headerStyle:{backgroundColor:"#3D3535" }}}/>
+    <Stack.Screen  name="PersonalInfo" component={PersonalInfo} options={{headerShown:false,presentation:"modal"}}/>
 
  	 </Stack.Navigator>
     </>
@@ -243,6 +251,7 @@ function AuthenticatedStack(){
 function Root(){
 	const AuthCxt = useContext(AuthContext);
 	const [isLogging,setLogging] = useState(true);
+
 	useEffect(()=>{
 		async function fetchLogin () {
 			const storedToken = await AsyncStorage.getItem("token")
@@ -271,11 +280,11 @@ function Navigation() {
 	)
 }
 export default function App() {
+ 
   return (
     <StoreContextProvider>
     <Provider store={store}>
-   
-	<Root/>
+	  <Root/>
     </Provider>
     </StoreContextProvider>
   );

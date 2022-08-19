@@ -1,11 +1,12 @@
-import { View,Text, FlatList,Pressable,StyleSheet, ScrollView, Alert } from 'react-native'
+import { View,Text, FlatList,Pressable,StyleSheet, ScrollView, Alert, ActivityIndicator } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import CartPage from '../components/Products/CartPage';
 import { addOrder } from '../Config/Http';
-import { useContext } from 'react';
+import { useContext,useState, useRef} from 'react';
 import { AuthContext } from '../store/context-store';
 import { cartActions } from '../store/store-redux';
 import FallBackScreen from '../components/UI/FallBackScreen';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 export default function Cart() {
   const itemsInCart = useSelector((state) => state.cartItems)
@@ -13,6 +14,13 @@ export default function Cart() {
   const total = useSelector((state) => state.total)
   const userCxt = useContext(AuthContext)
   const dispatch = useDispatch()
+  const [isConfirming,setConfirmed] = useState(false)
+  const [showAlert,setAlerted] = useState(false)
+
+  var today = new Date();
+  var date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+
+
   //FallBack Screen
   if(itemsInCart.length == 0) {
     return(
@@ -26,10 +34,27 @@ export default function Cart() {
   async function checkoutHandler() {
     const username = userCxt.username;
     const uid = userCxt.UID
+    setConfirmed(true)
     const id = await addOrder(itemsInCart,username,uid)
-    dispatch(cartActions.addNewOrder({id:id,itemsInCart:itemsInCart}))
+    dispatch(cartActions.addNewOrder({id:id,itemsInCart:itemsInCart,createdAt:date}))
+    setConfirmed(false)
+    // Alert.alert("Your order has been received!","a copy of the bill was automatically sent to your email")
+    setAlerted(true)
+  }
+  function removeCartItems(){
+    setAlerted(false)
     dispatch(cartActions.resetCart())
-    Alert.alert("Your order has been received!","a copy of the bill was automatically sent to your email")
+  }
+  let buttonContent;
+  if(isConfirming){
+    buttonContent= <ActivityIndicator size="large" color="#ffffff" style={{margin:5}}/>
+  }else{
+    buttonContent=(
+      <>
+      <Text style={{ fontWeight: "bold",fontSize: 18,color:"white",textAlign:"center"}}>Confirm Order </Text>
+      <Text style={{ fontWeight: "400",fontSize: 14,color:"white",textAlign:"center",marginTop:3}}>Total: {total} </Text>
+      </>
+    )
   }
   function renderFunction (itemData) {
     const item = itemData.item;
@@ -49,18 +74,32 @@ export default function Cart() {
   }
   return (
     <>
+      <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          title="Order Received !"
+          message="Your order has been received"
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showConfirmButton={true}
+          confirmText="   Dismiss   "
+          confirmButtonColor="#DD6B55"
+          onConfirmPressed={() => removeCartItems()}
+       
+      />
+      
     <FlatList keyExtractor={(item) => item.productId} data={itemsInCart} renderItem={renderFunction} />
     <View style={{justifyContent:"space-evenly"}} >
     <Pressable style={({pressed}) => pressed? {flexGrow:1,opacity:0.7}:{flexGrow:1}} onPress={checkoutHandler}>
         <View style={[styles.cartButton,{backgroundColor:"#DD4C18D6"}]}>
         <View style={{justifyContent:"center",alignContent:"center",marginTop:8}}>
-         <Text style={{ fontWeight: "bold",fontSize: 18,color:"white",textAlign:"center"}}>Confirm Order </Text>
-         <Text style={{ fontWeight: "400",fontSize: 14,color:"white",textAlign:"center",marginTop:3}}>Total: {total} </Text>
+         {buttonContent}
        </View>
        </View>
        </Pressable>
        </View>
-       </>
+  
+    </>
   )
 }
 const styles = StyleSheet.create({

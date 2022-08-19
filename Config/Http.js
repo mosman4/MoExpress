@@ -1,4 +1,3 @@
-import { deleteDoc, setDoc, updateDoc } from "@firebase/firestore";
 import { firebase,db } from "./fbConfig";
 
 export async function fetchProducts(){
@@ -19,7 +18,6 @@ export async function fetchProducts(){
             	stars:item.data().stars,
             })
         })
-        
      return productsObj;
 }
 // change the long if statements to switch
@@ -28,14 +26,23 @@ export async function fetchOrders(uid){
     const userOrdersRef = db.collection("myContent").doc(uid).collection("orders")
     const data = await userOrdersRef.get();
 	console.log(data.doc)
-	
-		data.docs.forEach((item)=>{
-			productsObj.push({
-				id:item.id,
-				orderItems:item.data().orders
-			})
+		 data.docs.forEach((item)=>{
+			// const fullDate = item.data().createdAt.toDate();
+			// var date = fullDate.getDate()+'-'+(fullDate.getMonth()+1)+'-'+fullDate.getFullYear();
+				try{
+					const fullDate = item.data().createdAt.toDate();
+					var date = fullDate.getDate()+'-'+(fullDate.getMonth()+1)+'-'+fullDate.getFullYear();
+					console.log(date)
+				}catch(error){
+					console.log(error)
+				}
+				productsObj.push({
+					id:item.id,
+					orderItems:item.data().orders,
+					orderDate: date,
+				})
+			
 		})
-	
  	return productsObj;
 }
 
@@ -48,17 +55,17 @@ export async function addOrder (productData,username,uid){
     if (productData != null){
         const timestamp = firebase.firestore.FieldValue.serverTimestamp();
         const data = {
-	Orders:productData,
-	User: {  
-	    userId:uid,
-	    name:username
+		Orders:{...productData,createdAt:timestamp},
+		User: {  
+	  	  userId:uid,
+	   	  name:username
 	    }
 	};
         try{
             await addToAllOrders.add(data) 
 			const res = await CartRemoveRef.get()
 			res.forEach((element) => element.ref.delete())
-            const response = await addToUserOrders.add({orders:productData})
+            const response = await addToUserOrders.add({orders:productData,createdAt:timestamp})
             id = response.id;
         }catch (error) {
             alert(error)
@@ -149,7 +156,30 @@ export async function fetchFavorite(uid){
      return productsObj;
 }
 
+export async function addAddress (uid,data){
+	const addressRef = db.collection("Users").doc(uid);
+	
+	if (data != null){
+		try{
+			await addressRef.update({"Address":data})
+		}catch (error) {
+			alert(error)
+		}
+	}
+}
 
+export async function FetchUserInfo (uid){
+	const addressRef = db.collection("Users").doc(uid);
+	
+    const addressData = await addressRef.get();
+	let userInformation={
+		address : addressData.data().Address,
+		username : addressData.data().name,
+		email : addressData.data().email
+	}
+        
+     return userInformation;
+}
 
 // export async function addProducts (productData){
 //     const addToRef = firebase.firestore().collection("Products")

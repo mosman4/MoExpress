@@ -1,7 +1,7 @@
 import {FlatList,View,Text } from "react-native";
 import React, { useEffect,useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { fetchProducts } from "../Config/Http";
+import {  fetchProducts } from "../Config/Http";
 import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "../store/store-redux";
 import BouncingPreloader from 'react-native-bouncing-preloaders';
