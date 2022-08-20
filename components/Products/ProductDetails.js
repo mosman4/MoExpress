@@ -311,6 +311,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.22,
     marginVertical:4,
     marginRight:10
-  
   },
 });
