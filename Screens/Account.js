@@ -60,19 +60,17 @@ export default function Account() {
     <View style={{marginTop:20,marginHorizontal:30}}>
       <Button onPress={logoutHandler}>{buttonContent}</Button>
     </View>
-    
    
     <AwesomeAlert
           show={infoShown}
           showProgress={false}
           message={"Name: "+userInfo.username +'\n' +"Email: " + userInfo.email+ '\n' +"Address: " + (userInfo.address?userInfo.address:"Not Added")}
-          closeOnTouchOutside={true}
+          closeOnTouchOutside={false}
           closeOnHardwareBackPress={false}
           showConfirmButton={true}
           confirmText="   Dismiss   "
           confirmButtonColor="#DD6B55"
           onConfirmPressed={() => setIsShown(false)}
-       
       />
     </View>
   )

@@ -31,7 +31,6 @@ import Orders from "./Screens/Orders";
 import OrdersCart from "./components/Products/OrdersCart";
 import Kids from "./Screens/Categories/Kids";
 import Location from "./Screens/Location";
-import PersonalInfo from "./Screens/PersonalInfo";
 
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
@@ -241,7 +240,6 @@ function AuthenticatedStack(){
     <Stack.Screen  name="Location" component={Location} options={{headerShown:true,title:"My Address",headerStyle:{backgroundColor:"#23153F"},headerTintColor:"white"}}/>
     <Stack.Screen  name="Orders" component={Orders} options={{headerShown:true,headerStyle:{backgroundColor:"#0C5973"},title:"Previous Orders",headerTintColor:"white"}}/>
     <Stack.Screen  name="OrdersCart" component={OrdersCart} options={{headerShown:true,title:"Previous Items",headerTintColor:"white", headerStyle:{backgroundColor:"#3D3535" }}}/>
-    <Stack.Screen  name="PersonalInfo" component={PersonalInfo} options={{headerShown:false,presentation:"modal"}}/>
 
  	 </Stack.Navigator>
     </>
