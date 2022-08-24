@@ -1,5 +1,5 @@
 # MoExpress
-E-commerce mobile app made with ReactNative + Redux + Firebase SDKs. The app Contains medium to complex ReactNative tools such as Redux as well as elegant designs with multiple animations and reusable components to avoid code duplication. The app has User authentication and password reset using Firebase.  All data is stored on Firebase cloud Firestore.
+This is an E-commerce mobile app made with ReactNative + Redux + Firebase SDKs. The app Contains medium to complex ReactNative tools such as Redux as well as elegant designs with multiple animations and reusable components to avoid code duplication. The app has User authentication and password reset using Firebase.  All data is stored on Firebase cloud Firestore.
 
 
 1.In Auth section, users can login, Sign Up or reset their password:
