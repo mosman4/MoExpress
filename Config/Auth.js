@@ -20,11 +20,19 @@ export async function registerWithEmailAndPassword(name,email,password) {
     return user
 }
 
-export async function sendPasswordReset(email){
-    await auth.sendPasswordResetEmail(email);
-}
+
 
 export async function logout() {
      await auth.signOut();
   };
 
+  export async function sendPasswordReset(email){
+   let err;
+    try{
+        await auth.sendPasswordResetEmail(email);
+    }catch(error){
+       
+       err= error
+    }
+    return err;
+}

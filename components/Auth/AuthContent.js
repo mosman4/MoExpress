@@ -12,7 +12,6 @@ function AuthContent({ isLogin, onAuthenticate }) {
   let dropDownAlertRef = useRef();
   
   const navigation = useNavigation()
-  const AuthCxt = useContext(AuthContext)
   const [credentialsInvalid, setCredentialsInvalid] = useState({
     email: false,
     password: false,
@@ -71,7 +70,7 @@ function AuthContent({ isLogin, onAuthenticate }) {
       />
       <View style={styles.buttons}>
         
-      {isLogin &&  <FlatButton onPress={()=> console.log("reset")}>
+      {isLogin &&  <FlatButton onPress={()=> navigation.navigate("Forgot")}>
           Forgot your password?
         </FlatButton>}
         <FlatButton onPress={switchAuthModeHandler}>

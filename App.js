@@ -31,6 +31,7 @@ import Orders from "./Screens/Orders";
 import OrdersCart from "./components/Products/OrdersCart";
 import Kids from "./Screens/Categories/Kids";
 import Location from "./Screens/Location";
+import ForgotScreen from "./Screens/Authentication/ForgotScreen";
 
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
@@ -217,6 +218,8 @@ function AuthStack(){
     <Stack.Navigator screenOptions={{headerShown:false}}>
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Signup" component={SignupScreen}/> 
+      <Stack.Screen name="Forgot" component={ForgotScreen} options={{headerShown:true}}/> 
+
     </Stack.Navigator>
     </>
   )
