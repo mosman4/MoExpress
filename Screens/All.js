@@ -64,8 +64,6 @@ export default function All() {
     )
   }
   
-
-  
   let formatted = searchedItem?.replace(/\b\w/g, l => l.toUpperCase())
   const selectedItems = products.filter((item) => {
     return !item.categoryIds.includes("c00") &&item.title.includes(formatted?formatted:"");
